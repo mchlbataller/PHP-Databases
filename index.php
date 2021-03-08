@@ -22,8 +22,8 @@
 
         foreach (AuthenticationService::view() as $row) {
             echo $row['email'];
+            echo "<button onclick=\"document.location.replace('/remove.php?email=$row[1]')\"> Delete </button>";
         }
-        
     ?>
 </body>
 

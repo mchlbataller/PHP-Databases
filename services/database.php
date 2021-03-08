@@ -44,4 +44,16 @@ class AuthenticationService
 
         return $query;
     }
+
+    public static function delete($email) {
+        try {
+            sql()->query("DELETE FROM web.test WHERE email=$email");
+
+            return true;
+        } catch (Exception $e) {
+            echo $e;
+
+            return false;
+        }
+    }
 }

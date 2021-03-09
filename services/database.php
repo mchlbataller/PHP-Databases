@@ -15,7 +15,7 @@ class AuthenticationService
     {
         try {
             // Create a new table.
-            sql()->query("CREATE TABLE `web`.`test` ( `_id` INT NOT NULL , `email` VARCHAR(255) NOT NULL , `password` VARCHAR(255) NOT NULL , PRIMARY KEY (`_id`)) ENGINE = InnoDB;");
+            sql()->query("CREATE TABLE `web`.`test` ( `_id` INT NOT NULL AUTO_INCREMENT, `email` VARCHAR(255) NOT NULL , `password` VARCHAR(255) NOT NULL , PRIMARY KEY (`_id`)) ENGINE = InnoDB;");
         } catch (Exception $e) {
             echo $e;
         }
@@ -25,29 +25,44 @@ class AuthenticationService
     {
         try {
             sql()->query("INSERT INTO web.test (email, password) VALUES ('$email', '$password')");
+
+            header("location: index.php?register=true");
         } catch (Exception $e) {
             echo $e;
+
+            return false;
         }
     }
 
     public static function login($email, $password)
     {
         try {
-            sql()->query("SELECT * FROM web.test WHERE email=$email AND password=$password");
+            $login = sql()->query("SELECT * FROM web.test WHERE email='$email' AND password='$password'");
+
+            foreach($login as $item) {
+                echo $item[1];
+                if($item[1]) {
+                    header("location: index.php?login=true");
+                } 
+            }
         } catch (Exception $e) {
             echo $e;
+
+            return false;
         }
     }
 
-    public static function view() {
+    public static function view()
+    {
         $query = sql()->query("SELECT * FROM web.test");
 
         return $query;
     }
 
-    public static function delete($email) {
+    public static function delete($email)
+    {
         try {
-            sql()->query("DELETE FROM web.test WHERE email=$email");
+            sql()->query("DELETE FROM web.test WHERE email='$email'");
 
             return true;
         } catch (Exception $e) {
@@ -55,5 +70,18 @@ class AuthenticationService
 
             return false;
         }
+    }
+
+    public static function update($id, $email, $password) {
+        try {
+            sql()->query("UPDATE web.test SET email='$email', password='$password' WHERE _id='$id'");
+
+            return true;
+        } catch (Exception $e) {
+            echo $e;
+
+            return false;
+        }
+
     }
 }
